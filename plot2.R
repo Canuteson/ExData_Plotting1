@@ -1,0 +1,18 @@
+data_file <- file.path("..", "hww1", "household_power_consumption.txt")
+
+data <- read.csv(data_file, sep = ";", na.strings = "?")
+
+data$DateTime <- as.Date(data$Date, "%d/%m/%Y")
+
+date1 <- as.Date("2007-02-01")
+date2 <- as.Date("2007-02-02")
+
+filtered_data <- data[data$DateTime >= date1 & data$DateTime <= date2,]
+filtered_data$DateTime <- strptime(paste(filtered_data$DateTime, filtered_data$Time, sep = " "), 
+                                   format = "%Y-%m-%d %H:%M:%S")
+
+png(file = "plot2.png", height = 480, width = 480)
+plot(filtered_data$DateTime, filtered_data$Global_active_power, 
+     xlab = "", ylab = "Global Active Power (kilowatts)", type = "n")
+lines(filtered_data$DateTime, filtered_data$Global_active_power)
+dev.off()
